@@ -13,8 +13,8 @@ export default function BottomNavBar({ navigation }) {
       <Pressable style={styles.navButton} onPress={() => {}}>
         <Image style={styles.icon} resizeMode="contain" source={require('../assets/images/icone engrenagem.png')} />
       </Pressable>
-      <Pressable style={styles.navButton} onPress={() => {}}>
-        <Image style={styles.icon} resizeMode="contain" source={require('../assets/images/Icone perfil.png')} />
+      <Pressable style={styles.navButton} onPress={() => navigation.goBack()}>
+      <Image style={styles.icon} resizeMode="contain" source={require('../assets/images/Icone perfil.png')} />
       </Pressable>
     </View>
   );
