@@ -15,21 +15,30 @@ export default function BottomNavBar({ navigation }) {
       <View style={styles.navBar}>
         <TouchableOpacity
           style={[styles.iconContainer, selectedIndex === 0 && styles.iconContainerActive]}
-          onPress={() => handlePress(0)}
+          onPress={() => {
+            navigation.navigate('PageHome');
+            handlePress(0);
+          }}
         >
           <Ionicons name="navigate" size={30} color={selectedIndex === 0 ? 'black' : 'white'} />
         </TouchableOpacity>
   
         <TouchableOpacity
           style={[styles.iconContainer, selectedIndex === 1 && styles.iconContainerActive]}
-          onPress={() => handlePress(1)}
+          onPress={() => {
+            navigation.navigate('PageConfig');
+            handlePress(1);
+          }}
         >
           <Ionicons name="layers" size={30} color={selectedIndex === 1 ? 'black' : 'white'} />
         </TouchableOpacity>
   
         <TouchableOpacity
           style={[styles.iconContainer, selectedIndex === 2 && styles.iconContainerActive]}
-          onPress={() => handlePress(2)}
+          onPress={() => {
+            navigation.navigate('PageProfile');
+            handlePress(2);
+          }}
         >
           <Ionicons name="settings" size={30} color={selectedIndex === 2 ? 'black' : 'white'} />
         </TouchableOpacity>
@@ -51,29 +60,29 @@ export default function BottomNavBar({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center', // Centraliza a barra de navegação verticalmente
-    alignItems: 'center', // Centraliza a barra de navegação horizontalmente
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   navBar: {
     flexDirection: 'row',
-    justifyContent: 'space-around', // Espaço consistente entre os ícones
-    width: '70%', // Torna a barra mais estreita
-    backgroundColor: '#000', // Cor de fundo da barra de navegação
+    justifyContent: 'space-around',
+    width: '70%',
+    backgroundColor: '#000',
     borderTopWidth: 1,
     borderColor: '#ddd',
     position: 'absolute',
-    bottom: 35, // Distância do fundo da tela
-    paddingVertical: 5, // Reduz a altura da barra
-    borderRadius: 50, // Borda arredondada
+    bottom: 35,
+    paddingVertical: 5,
+    borderRadius: 50,
   },
   iconContainer: {
-    backgroundColor: '#333', // Cor de fundo cinza para o ícone
-    padding: 12, // Reduz o tamanho do botão para diminuir a altura da barra
+    backgroundColor: '#333',
+    padding: 12,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconContainerActive: {
-    backgroundColor: 'red', // Cor de fundo vermelha quando o ícone está ativo
+    backgroundColor: 'red',
   },
 });
