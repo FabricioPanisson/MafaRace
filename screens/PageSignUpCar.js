@@ -1,10 +1,10 @@
-// PageSignUp.js
+// PageSignUpCar.js
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BackButton from '../components/BackButton';
 
-export default function PageSignUp({ navigation }) {
+export default function PageSignUpCar({ navigation }) {
     return  (
         <View style={styles.container}>
             <BackButton navigation={navigation} />
@@ -12,36 +12,37 @@ export default function PageSignUp({ navigation }) {
           <Image source={require("../assets/images/CronometroInicio.png")} style={styles.icon} />
           
           <View style={styles.titleContainer}>
-            <Text style={[styles.title, { color: "red" }]}>Tudo bueno</Text>
+            <Text style={[styles.title, { color: "red" }]}>Cadastre seu veículo</Text>
             <Text style={styles.subtitle}>Pronto para mais uma corrida? Faça login e vamos lá!</Text>
           </View>
         </View>
   
         <View style={styles.inputs}>
           <View style={styles.inputContainer}>
-            <Ionicons name="person-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Username' style={styles.input} placeholderTextColor="black" />
+            <Ionicons name="car-sport-outline" size={20} color="red" style={styles.inputIcon} />
+            <TextInput placeholder='Modelo' style={styles.input} placeholderTextColor="black" />
           </View>
 
           <View style={styles.inputContainer}>
-            <Ionicons name="mail-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Email' style={styles.input} placeholderTextColor="black" />
+            <Ionicons name="eye-outline" size={20} color="red" style={styles.inputIcon} />
+            <TextInput placeholder='Cor' style={styles.input} placeholderTextColor="black" />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="pencil-outline" size={20} color="red" style={styles.inputIcon} />
+            <TextInput placeholder='Ano de fabricação' style={styles.input} placeholderTextColor="black" />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="git-commit-outline" size={20} color="red" style={styles.inputIcon} />
+            <TextInput placeholder='Potência' style={styles.input} placeholderTextColor="black" />
           </View>
           
-          <View style={styles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Password' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Confirm Password' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
-          </View>
         </View>
         
   
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('PageSignUpCar')}>
-          <Text style={styles.loginButtonText}>Próxima etapa</Text>
+        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('PageLogin')}>
+          <Text style={styles.loginButtonText}>Cadastrar</Text>
           <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
         </TouchableOpacity>
   

@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Biblioteca de ícones para o botão "Voltar"
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function PageLogin({ navigation }) {
   return (
-    <ImageBackground source={require('../assets/images/backgroundMapLogin1.jpg')} style={styles.background}>
+    <View style={styles.container}>
       <View style={styles.main}>
         <Image source={require("../assets/images/CronometroInicio.png")} style={styles.icon} />
         
@@ -43,36 +43,37 @@ export default function PageLogin({ navigation }) {
         </TouchableOpacity>
         <Text> e cadastre-se</Text>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
+    justifyContent: 'flex-start', // Alinha os itens no topo
     alignItems: 'center',
+    paddingTop: 125, // Ajuste o padding superior conforme necessário
+    backgroundColor: '#fff', // Adicione um fundo branco ou outra cor
   },
   main: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   icon: {
     marginBottom: 20,
   },
   titleContainer: {
-    alignItems: 'left',
-    marginHorizontal: 20,
+    alignItems: 'center',
+    marginHorizontal: 20, 
   },
   title: {
     fontSize: 40,
     fontWeight: 'bold',
-    textAlign: 'left',
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    textAlign: 'left',
+    textAlign: 'center',
     color: '#333',
     marginTop: 10,
   },
@@ -105,30 +106,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '80%',
     marginBottom: 20,
-    marginTop: 10, // Espaçamento entre os inputs e o botão de login
-    justifyContent: 'center', // Centraliza os elementos na horizontal
+    justifyContent: 'center',
   },
   loginButtonText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'center',
-    flex: 1, // Permite que o texto ocupe o espaço disponível
   },
   iconRight: {
-    position: 'absolute', // Coloca o ícone na posição absoluta
-    right: 20, // Ajuste conforme necessário para o espaço à direita
+    position: 'absolute',
+    right: 20,
   },
   forgotPassword: {
     marginBottom: 20,
-    textAlign: 'left',
   },
   forgotPasswordText: {
     color: 'red',
     textDecorationLine: 'underline',
     fontWeight: 'bold',
     fontStyle: 'italic',
-    textAlign: 'left',
   },
   signupContainer: {
     flexDirection: 'row',
