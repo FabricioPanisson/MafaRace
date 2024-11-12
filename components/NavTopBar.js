@@ -1,14 +1,33 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import * as Font from 'expo-font';
 
 export default function NavTopBar({ navigation }) {
+
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'Montserrat-SemiBold': require('../assets/fonts/Montserrat-SemiBold.ttf'),
+      });
+      setFontLoaded(true);
+    }
+
+    loadFonts();
+  }, []);
+
+  if (!fontLoaded) {
+    return null;
+  }
+
   return (
     <View style={styles.topBar}>
       <TouchableOpacity style={styles.ellipseIcon} onPress={() => {}}>
-        <Text style={styles.iconText1}>125</Text> 
+        <Text style={styles.iconText1}>125</Text>
       </TouchableOpacity>
       {/* Adicione mais botões ou elementos aqui */}
-        <Text style={styles.iconText}>Av. Raul Sapequinha</Text>
+      <Text style={styles.iconText}>Av. Raul Sapequinha</Text>
     </View>
   );
 }
@@ -23,28 +42,28 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 94,
     height: '6%',
-    width: "50%",
-    alignItems: 'center', // Alinha verticalmente os itens na barra
+    width: '50%',
+    alignItems: 'center',
   },
   ellipseIcon: {
-    backgroundColor: '#fff',  // Círculo branco
-    borderRadius: 35,         // Deixa o contêiner circular
-    height: 25,               // Tamanho do círculo
+    backgroundColor: '#fff',
+    borderRadius: 35,
+    height: 25,
     width: 25,
-    justifyContent: 'center',  // Centraliza o texto
-    alignItems: 'center',      // Centraliza o texto
-    marginHorizontal: 10,      // Espaçamento entre círculos
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
   iconText: {
     fontSize: 12,
-    fontWeight: "600",
-    fontFamily: "Montserrat-SemiBold",            // Tamanho do texto dentro do círculo
-    color: '#fff',           // Cor do texto
+    fontWeight: '600',
+    fontFamily: 'Montserrat-SemiBold',
+    color: '#fff',
   },
   iconText1: {
-    fontSize: 12,            // Tamanho do texto dentro do círculo
-    fontWeight: "600",
-    fontFamily: "Montserrat-SemiBold",     
-    color: '#000',           // Cor do texto
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: 'Montserrat-SemiBold',
+    color: '#000',
   },
 });
