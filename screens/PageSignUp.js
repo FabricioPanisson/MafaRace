@@ -12,7 +12,7 @@ export default function PageSignUp({ navigation }) {
           <Image source={require("../assets/images/CronometroInicio.png")} style={styles.icon} />
           
           <View style={styles.titleContainer}>
-            <Text style={[styles.title, { color: "red" }]}>Tudo bueno</Text>
+            <Text style={[styles.title, { color: "red" }]}>Tudo bueno?</Text>
             <Text style={styles.subtitle}>Pronto para mais uma corrida? Faça login e vamos lá!</Text>
           </View>
         </View>
@@ -20,28 +20,28 @@ export default function PageSignUp({ navigation }) {
         <View style={styles.inputs}>
           <View style={styles.inputContainer}>
             <Ionicons name="person-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Username' style={styles.input} placeholderTextColor="black" />
+            <TextInput placeholder='Usuário' style={styles.input} placeholderTextColor="black" />
           </View>
 
           <View style={styles.inputContainer}>
             <Ionicons name="mail-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Email' style={styles.input} placeholderTextColor="black" />
+            <TextInput placeholder='E-mail' style={styles.input} placeholderTextColor="black" />
           </View>
           
           <View style={styles.inputContainer}>
             <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Password' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
+            <TextInput placeholder='Senha' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
           </View>
 
           <View style={styles.inputContainer}>
             <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Confirm Password' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
+            <TextInput placeholder='Confirme sua senha' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
           </View>
         </View>
         
   
         <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('PageSignUpCar')}>
-          <Text style={styles.loginButtonText}>Próxima etapa</Text>
+          <Text style={styles.loginButtonText}>Cadastrar veículo</Text>
           <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
         </TouchableOpacity>
   

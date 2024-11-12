@@ -18,12 +18,12 @@ export default function PageLogin({ navigation }) {
       <View style={styles.inputs}>
         <View style={styles.inputContainer}>
           <Ionicons name="person-outline" size={20} color="red" style={styles.inputIcon} />
-          <TextInput placeholder='Username' style={styles.input} placeholderTextColor="black" />
+          <TextInput placeholder='Usuário' style={styles.input} placeholderTextColor="black" />
         </View>
         
         <View style={styles.inputContainer}>
           <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
-          <TextInput placeholder='Password' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
+          <TextInput placeholder='Senha' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
         </View>
       </View>
 

@@ -7,6 +7,7 @@ import PageHome from './screens/PageHome';
 import PageSignUp from './screens/PageSignUp';
 import PageSignUpCar from './screens/PageSignUpCar';
 import PageProfile from './screens/PageProfile';
+import PageRank from './screens/PageRank';
 import PageConfig from './screens/PageConfig';
 
 import BottomNavBar from './components/BottomNavBar';
@@ -36,6 +37,14 @@ export default function App() {
           options={{
             headerShown: false,
             tabBar: () => <BottomNavBar /> // Barra personalizada para a página Profile
+          }} 
+        />
+        <Stack.Screen 
+          name="PageRank" 
+          component={PageRank} 
+          options={{
+            headerShown: false,
+            tabBar: () => <BottomNavBar /> // Barra personalizada para a página Ranking
           }} 
         />
         <Stack.Screen 

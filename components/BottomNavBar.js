@@ -26,7 +26,7 @@ export default function BottomNavBar({ navigation }) {
         <TouchableOpacity
           style={[styles.iconContainer, selectedIndex === 1 && styles.iconContainerActive]}
           onPress={() => {
-            navigation.navigate('PageConfig');
+            navigation.navigate('PageRank');
             handlePress(1);
           }}
         >
@@ -36,7 +36,7 @@ export default function BottomNavBar({ navigation }) {
         <TouchableOpacity
           style={[styles.iconContainer, selectedIndex === 2 && styles.iconContainerActive]}
           onPress={() => {
-            navigation.navigate('PageProfile');
+            navigation.navigate('PageConfig');
             handlePress(2);
           }}
         >

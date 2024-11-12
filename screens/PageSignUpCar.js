@@ -42,7 +42,7 @@ export default function PageSignUpCar({ navigation }) {
         
   
         <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('PageLogin')}>
-          <Text style={styles.loginButtonText}>Cadastrar</Text>
+          <Text style={styles.loginButtonText}>Finalizar cadastro</Text>
           <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
         </TouchableOpacity>
   

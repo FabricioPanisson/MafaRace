@@ -2,7 +2,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import React from 'react';
 import BackButton from '../components/BackButton.js';
 
-const PageProfile = ({ navigation }) => {
+const PageRank = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <BackButton navigation={navigation} />
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PageProfile;
+export default PageRank;
