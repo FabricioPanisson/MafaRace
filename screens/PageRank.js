@@ -7,8 +7,8 @@ const PageRank = ({ navigation }) => {
     <View style={styles.container}>
       <BackButton navigation={navigation} />
       <View style={styles.titleContainer}>
-            <Text style={[styles.titleRed]}>Ranking</Text>
-            <Text style={styles.titleBlack}>regional</Text>
+            <Text style={[styles.titleRed]}>Eventos</Text>
+            <Text style={styles.titleBlack}>ativos</Text>
       </View>
     </View>
   );
@@ -20,10 +20,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    marginHorizontal: 20, 
-    marginTop: 104,
-    marginRight: 122,
-    marginLeft:31,
+    marginTop: "20%",
   },
   titleRed: {
     fontSize: 64,
