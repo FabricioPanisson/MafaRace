@@ -2,7 +2,7 @@
   "expo": {
     "name": "MafaRace",
     "slug": "MafaRace",
-    "version": "0.7",
+    "version": "0..8.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
