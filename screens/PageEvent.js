@@ -3,7 +3,7 @@ import React from 'react';
 import BackButton from '../components/BackButton.js';
 import { BlurView } from 'expo-blur';
 
-const PageRank = ({ navigation }) => {
+const PageEvent = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <BackButton navigation={navigation} />
@@ -92,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PageRank;
+export default PageEvent;

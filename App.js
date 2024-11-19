@@ -7,7 +7,7 @@ import PageHome from './screens/PageHome';
 import PageSignUp from './screens/PageSignUp';
 import PageSignUpCar from './screens/PageSignUpCar';
 import PageProfile from './screens/PageProfile';
-import PageRank from './screens/PageRank';
+import PageEvent from './screens/PageEvent';
 import PageConfig from './screens/PageConfig';
 
 import BottomNavBar from './components/BottomNavBar';
@@ -40,8 +40,8 @@ export default function App() {
           }} 
         />
         <Stack.Screen 
-          name="PageRank" 
-          component={PageRank} 
+          name="PageEvent" 
+          component={PageEvent} 
           options={{
             headerShown: false,
             tabBar: () => <BottomNavBar /> // Barra personalizada para a página Ranking
