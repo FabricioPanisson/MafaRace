@@ -1,40 +1,42 @@
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
 import React from 'react';
 import BackButton from '../components/BackButton.js';
 import { BlurView } from 'expo-blur';
 
 const PageEvent = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <BackButton navigation={navigation} />
-      <View style={styles.titleContainer}>
-            <Text style={[styles.titleRed]}>Explore</Text>
-            <Text style={styles.titleBlack}>os</Text>
-            <Text style={styles.titleBlack}>eventos</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <BackButton navigation={navigation} />
+        <View style={styles.titleContainer}>
+              <Text style={[styles.titleRed]}>Explore</Text>
+              <Text style={styles.titleBlack}>os</Text>
+              <Text style={styles.titleBlack}>eventos</Text>
+        </View>
+        <View style={styles.viewEvents}>
+          <Image 
+              source={require("../assets/images/eventoCarros1.jpg")}
+              style={styles.eventImage}
+          />
+          <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
+            <Text style={styles.bodyText}>Nome do Evento</Text>
+            <Text style={styles.bodyText}>Horário</Text>
+            <Text style={styles.bodyText}>Local</Text>
+          </BlurView>
+        </View>
+        <View style={styles.viewEvents}>
+          <Image 
+              source={require("../assets/images/eventoCarros2.jpg")}
+              style={styles.eventImage}
+          />
+          <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
+            <Text style={styles.bodyText}>Nome do Evento</Text>
+            <Text style={styles.bodyText}>Horário</Text>
+            <Text style={styles.bodyText}>Local</Text>
+          </BlurView>
+        </View>
       </View>
-      <View style={styles.viewEvents}>
-        <Image 
-            source={require("../assets/images/eventoCarros1.jpg")}
-            style={styles.eventImage}
-        />
-        <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
-          <Text style={styles.bodyText}>Nome do Evento</Text>
-          <Text style={styles.bodyText}>Horário</Text>
-          <Text style={styles.bodyText}>Local</Text>
-        </BlurView>
-      </View>
-      <View style={styles.viewEvents}>
-        <Image 
-            source={require("../assets/images/eventoCarros2.jpg")}
-            style={styles.eventImage}
-        />
-        <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
-          <Text style={styles.bodyText}>Nome do Evento</Text>
-          <Text style={styles.bodyText}>Horário</Text>
-          <Text style={styles.bodyText}>Local</Text>
-        </BlurView>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
