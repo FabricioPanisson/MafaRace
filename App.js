@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import 'react-native-url-polyfill/auto';
 
 import PageLogin from './screens/PageLogin';
 import PageHome from './screens/PageHome';
