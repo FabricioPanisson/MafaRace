@@ -1,52 +1,109 @@
-// PageSignUp.js
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BackButton from '../components/BackButton';
+import * as authService from '../services/authService';
 
 export default function PageSignUp({ navigation }) {
-    return  (
-        <View style={styles.container}>
-            <BackButton navigation={navigation} />
-        <View style={styles.main}>
-          <Image source={require("../assets/images/CronometroInicio.png")} style={styles.icon} />
-          
-          <View style={styles.titleContainer}>
-            <Text style={[styles.title, { color: "red" }]}>Tudo bueno?</Text>
-            <Text style={styles.subtitle}>Pronto para mais uma corrida? Faça login e vamos lá!</Text>
-          </View>
-        </View>
-  
-        <View style={styles.inputs}>
-          <View style={styles.inputContainer}>
-            <Ionicons name="person-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Usuário' style={styles.input} placeholderTextColor="black" />
-          </View>
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-          <View style={styles.inputContainer}>
-            <Ionicons name="mail-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='E-mail' style={styles.input} placeholderTextColor="black" />
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Senha' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
-          </View>
+  const handleSignUp = async () => {
+    setLoading(true);
+    setError(null);
 
-          <View style={styles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Confirme sua senha' style={styles.input} placeholderTextColor="black" secureTextEntry={true} />
-          </View>
+    try {
+      if (!username || !email || !password || !confirmPassword) {
+        throw new Error("Todos os campos são obrigatórios.");
+      }
+
+      if (password !== confirmPassword) {
+        throw new Error("As senhas não coincidem.");
+      }
+
+      const user = await authService.signUp({ email, password });
+
+      navigation.navigate('PageSignUpCar', { userId: user.id, username });
+    } catch (error) {
+      console.error("Erro no cadastro:", error);
+      Alert.alert("Erro ao cadastrar", error.message);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <BackButton navigation={navigation} />
+      <View style={styles.main}>
+        <Image source={require("../assets/images/CronometroInicio.png")} style={styles.icon} />
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, { color: "red" }]}>Tudo bueno?</Text>
+          <Text style={styles.subtitle}>Pronto para mais uma corrida? Cadastre-se e vamos lá!</Text>
         </View>
-        
-  
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('PageSignUpCar')}>
-          <Text style={styles.loginButtonText}>Cadastrar veículo</Text>
-          <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-  
       </View>
-    );
+
+      <View style={styles.inputs}>
+        <View style={styles.inputContainer}>
+          <Ionicons name="person-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder="Usuário"
+            style={styles.input}
+            placeholderTextColor="black"
+            value={username}
+            onChangeText={setUsername}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="mail-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder="E-mail"
+            style={styles.input}
+            placeholderTextColor="black"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder="Senha"
+            style={styles.input}
+            placeholderTextColor="black"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="lock-closed-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder="Confirme sua senha"
+            style={styles.input}
+            placeholderTextColor="black"
+            secureTextEntry={true}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+        </View>
+      </View>
+
+      <TouchableOpacity style={styles.loginButton} onPress={handleSignUp} disabled={loading}>
+        <Text style={styles.loginButtonText}>{loading ? "Cadastrando..." : "Próximo"}</Text>
+        <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

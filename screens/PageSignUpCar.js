@@ -1,53 +1,130 @@
-// PageSignUpCar.js
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BackButton from '../components/BackButton';
+import * as registerCar from '../services/registerCar';
 
-export default function PageSignUpCar({ navigation }) {
-    return  (
-        <View style={styles.container}>
-            <BackButton navigation={navigation} />
-        <View style={styles.main}>
-          <Image source={require("../assets/images/CronometroInicio.png")} style={styles.icon} />
-          
-          <View style={styles.titleContainer}>
-            <Text style={[styles.title, { color: "red" }]}>Cadastre seu veículo</Text>
-            <Text style={styles.subtitle}>Pronto para mais uma corrida? Faça login e vamos lá!</Text>
-          </View>
+export default function PageSignUpCar({ navigation, route }) {
+  const { userId, username } = route.params;
+
+  const [model, setModel] = useState('');
+  const [color, setColor] = useState('');
+  const [year, setYear] = useState('');
+  const [power, setPower] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleRegisterCar = async () => {
+    setLoading(true);
+    try {
+      // Validar campos
+      if (!model || !color || !year || !power) {
+        throw new Error('Todos os campos são obrigatórios.');
+      }
+
+      if (!/^\d{4}$/.test(year) || year < 1900 || year > new Date().getFullYear()) {
+        throw new Error('Ano de fabricação inválido.');
+      }
+
+      if (isNaN(power) || power <= 0) {
+        throw new Error('Potência deve ser um número positivo.');
+      }
+
+      // Registrar o carro
+      await registerCar.registerCar({
+        userId,
+        model,
+        color,
+        year: parseInt(year, 10),
+        power: parseFloat(power),
+      });
+
+      // Navegar para a tela de login ou principal
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      navigation.navigate('PageLogin');
+
+    } catch (error) {
+      console.error('Erro ao cadastrar o carro:', error);
+      Alert.alert('Erro', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return  (
+    <View style={styles.container}>
+      <BackButton navigation={navigation} />
+      <View style={styles.main}>
+        <Image source={require("../assets/images/CronometroInicio.png")} style={styles.icon} />
+        
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, { color: "red" }]}>Cadastre seu veículo</Text>
+          <Text style={styles.subtitle}>Preencha as informações do seu veículo para continuar.</Text>
         </View>
-  
-        <View style={styles.inputs}>
-          <View style={styles.inputContainer}>
-            <Ionicons name="car-sport-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Modelo' style={styles.input} placeholderTextColor="black" />
-          </View>
+      </View>
 
-          <View style={styles.inputContainer}>
-            <Ionicons name="eye-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Cor' style={styles.input} placeholderTextColor="black" />
-          </View>
+      <View style={styles.inputs}>
+        <View style={styles.inputContainer}>
+          <Ionicons name="car-sport-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder='Modelo'
+            style={styles.input}
+            placeholderTextColor="black"
+            value={model}
+            onChangeText={setModel}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Ionicons name="pencil-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Ano de fabricação' style={styles.input} placeholderTextColor="black" />
-          </View>
+        <View style={styles.inputContainer}>
+          <Ionicons name="color-palette-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder='Cor'
+            style={styles.input}
+            placeholderTextColor="black"
+            value={color}
+            onChangeText={setColor}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Ionicons name="git-commit-outline" size={20} color="red" style={styles.inputIcon} />
-            <TextInput placeholder='Potência' style={styles.input} placeholderTextColor="black" />
-          </View>
-          
+        <View style={styles.inputContainer}>
+          <Ionicons name="calendar-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder='Ano de fabricação'
+            style={styles.input}
+            placeholderTextColor="black"
+            keyboardType="numeric"
+            value={year}
+            onChangeText={setYear}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="speedometer-outline" size={20} color="red" style={styles.inputIcon} />
+          <TextInput
+            placeholder='Potência (cv)'
+            style={styles.input}
+            placeholderTextColor="black"
+            keyboardType="numeric"
+            value={power}
+            onChangeText={setPower}
+          />
         </View>
         
-  
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('PageLogin')}>
-          <Text style={styles.loginButtonText}>Finalizar cadastro</Text>
-          <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-  
       </View>
-    );
+      
+
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={handleRegisterCar}
+        disabled={loading}
+      >
+        <Text style={styles.loginButtonText}>
+          {loading ? 'Cadastrando...' : 'Finalizar cadastro'}
+        </Text>
+        <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
+      </TouchableOpacity>
+
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
