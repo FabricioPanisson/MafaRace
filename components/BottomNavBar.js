@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,47 +10,76 @@ export default function BottomNavBar({ navigation }) {
     console.log(`Ícone ${index + 1} pressionado`);
   };
 
+  // Monitora mudanças de página
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('state', (e) => {
+      const currentRoute = e.data.state.routes[e.data.state.index].name;
+
+      // Se a página 'Home' for acessada, o ícone home ficará vermelho
+      if (currentRoute === 'PageHome') {
+        setSelectedIndex(0);
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   return (
-    <View style={styles.container}>
+    <View style={styles.navBarContainer}>
       <View style={styles.navBar}>
+        {/* Botão central maior */}
         <TouchableOpacity
-          style={[styles.iconContainer, selectedIndex === 0 && styles.iconContainerActive]}
+          style={styles.centralButton}
+          onPress={() => {
+            navigation.navigate('PageSignUpRace');
+            handlePress(4);
+          }}
+        >
+          <Ionicons name="stopwatch" size={36} color="white" />
+        </TouchableOpacity>
+
+        {/* Ícone lateral esquerdo (Home) */}
+        <TouchableOpacity
+          style={styles.iconContainer}
           onPress={() => {
             navigation.navigate('PageHome');
             handlePress(0);
           }}
         >
-          <Ionicons name="navigate" size={30} color={selectedIndex === 0 ? 'black' : 'white'} />
+          <Ionicons name="navigate" size={24} color={selectedIndex === 0 ? 'red' : 'white'} />
         </TouchableOpacity>
-  
+
+        {/* Ícone lateral direito (Event) */}
         <TouchableOpacity
-          style={[styles.iconContainer, selectedIndex === 1 && styles.iconContainerActive]}
+          style={styles.iconContainer}
           onPress={() => {
-            navigation.navigate('PageRank');
+            navigation.navigate('PageEvent');
             handlePress(1);
           }}
         >
-          <Ionicons name="layers" size={30} color={selectedIndex === 1 ? 'black' : 'white'} />
+          <Ionicons name="earth" size={24} color={selectedIndex === 1 ? 'red' : 'white'} />
         </TouchableOpacity>
-  
+
+        {/* Ícone lateral esquerdo (Config) */}
         <TouchableOpacity
-          style={[styles.iconContainer, selectedIndex === 2 && styles.iconContainerActive]}
+          style={[styles.iconContainer, { marginLeft: 50 }]}
           onPress={() => {
             navigation.navigate('PageConfig');
             handlePress(2);
           }}
         >
-          <Ionicons name="settings" size={30} color={selectedIndex === 2 ? 'black' : 'white'} />
+          <Ionicons name="settings" size={24} color={selectedIndex === 2 ? 'red' : 'white'} />
         </TouchableOpacity>
-  
+
+        {/* Ícone lateral direito (Profile) */}
         <TouchableOpacity
-          style={[styles.iconContainer, selectedIndex === 3 && styles.iconContainerActive]}
+          style={styles.iconContainer}
           onPress={() => {
             navigation.navigate('PageProfile');
             handlePress(3);
           }}
         >
-          <Ionicons name="person" size={30} color={selectedIndex === 3 ? 'black' : 'white'} />
+          <Ionicons name="person" size={24} color={selectedIndex === 3 ? 'red' : 'white'} />
         </TouchableOpacity>
       </View>
     </View>
@@ -58,31 +87,43 @@ export default function BottomNavBar({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
+  navBarContainer: {
+    position: 'absolute',
+    bottom: 60, // Eleva a barra para ficar mais alta na tela
+    width: '100%',
     alignItems: 'center',
   },
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '70%',
     backgroundColor: '#000',
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-    position: 'absolute',
-    bottom: 35,
-    paddingVertical: 5,
-    borderRadius: 50,
+    height: 55,
+    width: '80%', // Mantém a largura menor
+    paddingVertical: 10,
+    borderRadius: 50, // Cantos arredondados
+    alignItems: 'center',
+    elevation: 10, // Sombra para Android
+    shadowColor: '#000', // Sombra para iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    position: 'relative', // Mantém os elementos posicionados dentro da barra
   },
-  iconContainer: {
-    backgroundColor: '#333',
-    padding: 12,
-    borderRadius: 50,
+  centralButton: {
+    backgroundColor: 'red',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  iconContainerActive: {
-    backgroundColor: 'red',
+    position: 'absolute',
+    top: -40, // Eleva o botão ainda mais para evitar sobreposição
+    left: '50%', // Centraliza o botão na barra
+    marginLeft: -35, // Ajusta o deslocamento horizontal para alinhar o centro
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 10, // Sombra para Android
   },
 });

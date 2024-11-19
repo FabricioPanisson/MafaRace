@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
@@ -7,51 +7,57 @@ const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  // Função para obter a localização atual
-  const getCurrentLocation = async () => {
-    // Solicita permissão para acessar a localização
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permissão de localização negada');
-      return;
-    }
-
-    // Obtém a localização atual
-    let currentLocation = await Location.getCurrentPositionAsync({});
-    setLocation(currentLocation);
-  };
-
   useEffect(() => {
+    const getCurrentLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permissão de localização negada');
+        return;
+      }
+
+      try {
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+      } catch (error) {
+        setErrorMsg('Erro ao obter localização.');
+      }
+    };
+
     getCurrentLocation();
   }, []);
 
-  // Define as coordenadas do mapa
-  const initialRegion = {
-    latitude: location?.coords?.latitude ?? -28.2579, // Coordenada de Passo Fundo, RS
-    longitude: location?.coords?.longitude ?? -52.4065, // Coordenada de Passo Fundo, RS
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
-  
-  
+  if (errorMsg) {
+    Alert.alert('Erro', errorMsg);
+  }
+
+  if (!location) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        region={initialRegion}
+        initialRegion={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
         showsUserLocation={true}
         followsUserLocation={true}
       >
-        {location && (
-          <Marker
-            coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            }}
-            title="Você está aqui"
-          />
-        )}
+        <Marker
+          coordinate={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          }}
+          title="Você está aqui"
+        />
       </MapView>
     </View>
   );
@@ -65,6 +71,11 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

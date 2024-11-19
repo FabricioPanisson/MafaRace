@@ -6,6 +6,7 @@ import PageLogin from './screens/PageLogin';
 import PageHome from './screens/PageHome';
 import PageSignUp from './screens/PageSignUp';
 import PageSignUpCar from './screens/PageSignUpCar';
+import PageSignUpRace from './screens/PageSignUpRace';
 import PageProfile from './screens/PageProfile';
 import PageEvent from './screens/PageEvent';
 import PageConfig from './screens/PageConfig';
@@ -23,6 +24,14 @@ export default function App() {
         <Stack.Screen name="PageSignUpCar" component={PageSignUpCar} options={{ headerShown: false }} />
 
         {/* Adicionando BottomNavBar nas páginas principais */}
+        <Stack.Screen 
+          name="PageSignUpRace" 
+          component={PageSignUpRace} 
+          options={{
+            headerShown: false,
+            tabBar: () => <BottomNavBar /> // Barra personalizada para a página Cadastro de racha 
+          }} 
+        />
         <Stack.Screen 
           name="PageHome" 
           component={PageHome} 
