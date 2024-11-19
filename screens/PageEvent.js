@@ -1,40 +1,62 @@
 import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton.js';
 import { BlurView } from 'expo-blur';
+import { supabase } from '../services/supabaseClient.js';
 
 const PageEvent = ({ navigation }) => {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('race')
+          .select('*')
+          .eq('mode', 'evento')
+          .order('datetime', { ascending: true });
+
+        if (error) {
+          console.error('Erro ao buscar eventos:', error);
+        } else {
+          setEvents(data);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar eventos:', err);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <ScrollView>
       <View style={styles.container}>
         <BackButton navigation={navigation} />
         <View style={styles.titleContainer}>
-              <Text style={[styles.titleRed]}>Explore</Text>
-              <Text style={styles.titleBlack}>os</Text>
-              <Text style={styles.titleBlack}>eventos</Text>
+          <Text style={styles.titleRed}>Explore</Text>
+          <Text style={styles.titleBlack}>os</Text>
+          <Text style={styles.titleBlack}>eventos</Text>
         </View>
-        <View style={styles.viewEvents}>
-          <Image 
-              source={require("../assets/images/eventoCarros1.jpg")}
+        {events.map((event) => (
+          <View key={event.id} style={styles.viewEvents}>
+            <Image
+              source={
+                event.image_url
+                  ? { uri: event.image_url }
+                  : require("../assets/images/eventoCarros1.jpg")
+              }
               style={styles.eventImage}
-          />
-          <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
-            <Text style={styles.bodyText}>Nome do Evento</Text>
-            <Text style={styles.bodyText}>Horário</Text>
-            <Text style={styles.bodyText}>Local</Text>
-          </BlurView>
-        </View>
-        <View style={styles.viewEvents}>
-          <Image 
-              source={require("../assets/images/eventoCarros2.jpg")}
-              style={styles.eventImage}
-          />
-          <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
-            <Text style={styles.bodyText}>Nome do Evento</Text>
-            <Text style={styles.bodyText}>Horário</Text>
-            <Text style={styles.bodyText}>Local</Text>
-          </BlurView>
-        </View>
+            />
+            <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
+              <Text style={styles.bodyText}>{event.event_name}</Text>
+              <Text style={styles.bodyText}>
+                {new Date(event.datetime).toLocaleString()}
+              </Text>
+              <Text style={styles.bodyText}>{event.location}</Text>
+            </BlurView>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -47,7 +69,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    marginTop: "20%",
+    marginTop: '20%',
   },
   titleRed: {
     fontSize: 64,
@@ -78,11 +100,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 10,
   },
   viewEvents: {
     position: 'relative',
     width: '90%',
-    minHeight: '10%',
     borderRadius: 25,
     overflow: 'hidden',
     marginTop: '10%',
@@ -90,7 +112,7 @@ const styles = StyleSheet.create({
   eventImage: {
     width: '100%',
     height: '100%',
-    position: 'absolute'
+    position: 'absolute',
   },
 });
 
