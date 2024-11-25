@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton.js';
 import { BlurView } from 'expo-blur';
@@ -30,42 +30,51 @@ const PageEvent = ({ navigation }) => {
   }, []);
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <BackButton navigation={navigation} />
-        <View style={styles.titleContainer}>
-          <Text style={styles.titleRed}>Explore</Text>
-          <Text style={styles.titleBlack}>os</Text>
-          <Text style={styles.titleBlack}>eventos</Text>
-        </View>
-        {events.map((event) => (
-          <View key={event.id} style={styles.viewEvents}>
-            <Image
-              source={
-                event.image_url
-                  ? { uri: event.image_url }
-                  : require("../assets/images/eventoCarros1.jpg")
-              }
-              style={styles.eventImage}
-            />
-            <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
-              <Text style={styles.bodyText}>{event.event_name}</Text>
-              <Text style={styles.bodyText}>
-                {new Date(event.datetime).toLocaleString()}
-              </Text>
-              <Text style={styles.bodyText}>{event.location}</Text>
-            </BlurView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <BackButton navigation={navigation} />
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleRed}>Explore</Text>
+            <Text style={styles.titleBlack}>os</Text>
+            <Text style={styles.titleBlack}>eventos</Text>
           </View>
-        ))}
-      </View>
-    </ScrollView>
+          {events.map((event) => (
+            <View key={event.id} style={styles.viewEvents}>
+              <Image
+                source={
+                  event.image_url
+                    ? { uri: event.image_url }
+                    : require("../assets/images/eventoCarros1.jpg")
+                }
+                style={styles.eventImage}
+              />
+              <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
+                <Text style={styles.bodyText}>{event.event_name}</Text>
+                <Text style={styles.bodyText}>
+                  {new Date(event.datetime).toLocaleString()}
+                </Text>
+                <Text style={styles.bodyText}>{event.location}</Text>
+              </BlurView>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    paddingVertical: 20,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   titleContainer: {
     alignItems: 'center',
@@ -93,26 +102,25 @@ const styles = StyleSheet.create({
     color: '#FAFEFF',
   },
   absoluteBlur: {
-    position: 'relative',
-    minWidth: '50%',
-    minHeight: '10%',
-    borderRadius: 25,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
     paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   viewEvents: {
     position: 'relative',
     width: '90%',
     borderRadius: 25,
     overflow: 'hidden',
-    marginTop: '10%',
+    marginVertical: 20,
   },
   eventImage: {
     width: '100%',
-    height: '100%',
-    position: 'absolute',
+    height: 200,
   },
 });
 
