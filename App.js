@@ -11,6 +11,7 @@ import PageSignUpRace from './screens/PageSignUpRace';
 import PageProfile from './screens/PageProfile';
 import PageEvent from './screens/PageEvent';
 import PageConfig from './screens/PageConfig';
+import EventMap from './screens/EventMap';
 
 import BottomNavBar from './components/BottomNavBar';
 
@@ -65,6 +66,11 @@ export default function App() {
             tabBar: () => <BottomNavBar /> // Barra personalizada para a página Config
           }} 
         />
+        <Stack.Screen
+          name="EventMap"
+          component={EventMap}
+          options={{ headerShown: false }}
+        />  
       </Stack.Navigator>
     </NavigationContainer>
   );

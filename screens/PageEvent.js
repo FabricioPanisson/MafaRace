@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, SafeAreaView, TouchableOpacity, event, } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton.js';
 import { BlurView } from 'expo-blur';
@@ -28,7 +28,10 @@ const PageEvent = ({ navigation }) => {
 
     fetchEvents();
   }, []);
-
+  
+  const handleEventSelect = (event) => {
+    navigation.navigate('EventMap', { event }); // Navega para a tela do mapa com os detalhes do evento
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -42,25 +45,33 @@ const PageEvent = ({ navigation }) => {
             <Text style={styles.titleBlack}>os</Text>
             <Text style={styles.titleBlack}>eventos</Text>
           </View>
-          {events.map((event) => (
-            <View key={event.id} style={styles.viewEvents}>
-              <Image
-                source={
-                  event.image_url
-                    ? { uri: event.image_url }
-                    : require("../assets/images/eventoCarros1.jpg")
-                }
-                style={styles.eventImage}
-              />
-              <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
-                <Text style={styles.bodyText}>{event.event_name}</Text>
-                <Text style={styles.bodyText}>
-                  {new Date(event.datetime).toLocaleString()}
-                </Text>
-                <Text style={styles.bodyText}>{event.location}</Text>
-              </BlurView>
-            </View>
-          ))}
+          {events.length === 0 ? (
+            <Text style={styles.noEventsText}>Nenhum evento disponível.</Text>
+          ) : (
+            events.map((event) => (
+              <TouchableOpacity
+                key={event.id}
+                style={styles.viewEvents}
+                onPress={() => navigation.navigate('EventMap', { event })}
+              >
+                <Image
+                  source={
+                    event.image_url
+                      ? { uri: event.image_url }
+                      : require("../assets/images/eventoCarros1.jpg")
+                  }
+                  style={styles.eventImage}
+                />
+                <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
+                  <Text style={styles.bodyText}>{event.event_name}</Text>
+                  <Text style={styles.bodyText}>
+                    {new Date(event.datetime).toLocaleString()}
+                  </Text>
+                  <Text style={styles.bodyText}>{event.location}</Text>
+                </BlurView>
+              </TouchableOpacity>
+            ))
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

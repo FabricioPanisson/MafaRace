@@ -36,7 +36,7 @@ export default function PageSignUp({ navigation }) {
       setLoading(false);
     }
   };
-
+  console.log("Dados fornecidos:", { username, email, password, confirmPassword });
   return (
     <View style={styles.container}>
       <BackButton navigation={navigation} />

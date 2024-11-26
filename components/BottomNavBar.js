@@ -89,7 +89,7 @@ export default function BottomNavBar({ navigation }) {
 const styles = StyleSheet.create({
   navBarContainer: {
     position: 'absolute',
-    bottom: 60, // Eleva a barra para ficar mais alta na tela
+    bottom: 40, // Eleva a barra para ficar mais alta na tela
     width: '100%',
     alignItems: 'center',
   },
