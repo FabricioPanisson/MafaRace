@@ -22,10 +22,16 @@
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ]
+      ],
+      "package": "com.guihb.MafaRace"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "61cf0bf2-6b59-4a8a-9878-c47dc03434d1"
+      }
     }
   }
 }

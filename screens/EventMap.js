@@ -7,8 +7,11 @@ const EventMap = ({ route }) => {
 
   // Coordenadas de exemplo em Passo Fundo
   const coordinates = [
-    { latitude: -28.2600, longitude: -52.4091 }, // Ponto de partida (exemplo)
-    { latitude: -28.2650, longitude: -52.4200 }, // Ponto de chegada (exemplo)
+    { latitude: -28.26916129433125, longitude: -52.425179990692 }, // Ponto de partida (exemplo)
+    { latitude: -28.2669354665173,  longitude: -52.41988037089626 },
+    { latitude: -28.264813078741838,   longitude: -52.41514594888647 },
+    { latitude: -28.2623686964428,  longitude: -52.41020915041962 },
+    { latitude: -28.259061769072673, longitude:  -52.40338280443629 }, // Ponto de chegada (exemplo)
   ];
 
   const eventDate = new Date(event.datetime);
