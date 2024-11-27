@@ -63,13 +63,6 @@ const Map = () => {
         showsUserLocation={true}
         followsUserLocation={true}
       >
-        <Marker
-          coordinate={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          }}
-          title="Você está aqui"
-        />
       </MapView>
 
       {/* Medidor circular no lado direito */}
