@@ -1,43 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Switch, FlatList, TouchableHighlight } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
-
 import BackButton from '../components/BackButton';
 import { signupsraceService } from '../services/signUpRace';
-import { supabase } from '../services/supabaseClient'; // Certifique-se de importar o supabase client
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { supabase } from '../services/supabaseClient'; 
 
 export default function PageSignUpRace({ navigation }) {
-  const [isTurnedOn, setIsTurnedOn] = useState(true); // Modo Racha ou Evento
-  const [selectedDistance, setSelectedDistance] = useState(''); // Percurso selecionado
-  const [showDistanceOptions, setShowDistanceOptions] = useState(false); // Exibir opções de percurso
+  const [isTurnedOn, setIsTurnedOn] = useState(true); 
+  const [selectedDistance, setSelectedDistance] = useState(''); 
+  const [showDistanceOptions, setShowDistanceOptions] = useState(false); 
+  const [adversary, setAdversary] = useState(''); // Variável adversário (como string)
+  const [eventName, setEventName] = useState(''); 
+  const [location, setLocation] = useState(''); 
+  const [date, setDate] = useState(new Date()); 
+  const [showDatePicker, setShowDatePicker] = useState(false); 
 
-  const [adversary, setAdversary] = useState(''); // Adversário no modo Racha
-  const [eventName, setEventName] = useState(''); // Nome do evento
-  const [location, setLocation] = useState(''); // Local do evento
-  const [date, setDate] = useState(new Date()); // Data e hora do evento
-  const [showDatePicker, setShowDatePicker] = useState(false); // Exibir o DateTimePicker
+  const distanceOptions = ['5', '10', '20'];  // Agora a lista de opções de percurso contém apenas números
 
-  const distanceOptions = ['5 km', '10 km', '20 km'];
-
-  // Alternar entre Racha e Evento
   const handleToggleSwitch = () => {
     setIsTurnedOn(previousState => !previousState);
-    // Limpa os campos quando alterna o modo
-    setAdversary('');
+    setAdversary(''); // Resetando o adversário
     setSelectedDistance('');
-    setEventName('');
+    setEventName(''); 
     setLocation('');
     setDate(new Date());
   };
 
-  // Selecionar o percurso
   const handleSelectDistance = (distance) => {
     setSelectedDistance(distance);
     setShowDistanceOptions(false);
   };
 
-  // Manipular a alteração da data/hora
   const onChangeDateTime = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
@@ -45,25 +39,23 @@ export default function PageSignUpRace({ navigation }) {
     }
   };
 
-  // Função para cadastrar Racha ou Evento
   const handleSignUpRace = async () => {
     if (isTurnedOn) {
-      // Cadastro de Racha
       if (!selectedDistance) {
-        alert('Por favor, selecione um percurso.');
+        alert('Por favor, preencha todos os campos obrigatórios (Percurso).');
         return;
       }
 
       try {
-        await signupsraceService.createRacha(adversary, selectedDistance);
+        // Certificando-se de que o adversário seja enviado como string
+        await signupsraceService.createRacha(adversary ? String(adversary) : '', selectedDistance);  // Garantindo que adversary seja uma string
         alert('Racha cadastrado com sucesso!');
         navigation.navigate('PageHome');
       } catch (error) {
-        console.error('Erro ao cadastrar racha no componente:', JSON.stringify(error, null, 2));
+        console.error('Erro ao cadastrar racha:', error);
         alert(`Ocorreu um erro ao cadastrar o racha: ${error.message || JSON.stringify(error)}`);
       }
     } else {
-      // Cadastro de Evento
       if (!eventName || !location || !date) {
         alert('Por favor, preencha todos os campos.');
         return;
@@ -79,7 +71,7 @@ export default function PageSignUpRace({ navigation }) {
         alert('Evento cadastrado com sucesso!');
         navigation.navigate('PageHome');
       } catch (error) {
-        console.error('Erro ao cadastrar evento no componente:', JSON.stringify(error, null, 2));
+        console.error('Erro ao cadastrar evento:', error);
         alert(`Ocorreu um erro ao cadastrar o evento: ${error.message || JSON.stringify(error)}`);
       }
     }
@@ -98,7 +90,6 @@ export default function PageSignUpRace({ navigation }) {
         </View>
       </View>
 
-      {/* Switch para alternar entre Racha e Evento */}
       <View style={styles.switchContainer}>
         <Text style={styles.switchLabel}>{isTurnedOn ? 'Modo Racha' : 'Modo Evento'}</Text>
         <Switch
@@ -109,11 +100,9 @@ export default function PageSignUpRace({ navigation }) {
         />
       </View>
 
-      {/* Formulário */}
       <View style={styles.inputs}>
         {isTurnedOn ? (
           <>
-            {/* Formulário de Racha */}
             <View style={styles.inputContainer}>
               <Ionicons name="person-outline" size={20} color="red" style={styles.inputIcon} />
               <TextInput
@@ -121,7 +110,7 @@ export default function PageSignUpRace({ navigation }) {
                 style={styles.input}
                 placeholderTextColor="black"
                 value={adversary}
-                onChangeText={setAdversary}
+                onChangeText={setAdversary}  // Capturando string do adversário
               />
             </View>
             <View style={styles.inputContainer}>
@@ -135,24 +124,21 @@ export default function PageSignUpRace({ navigation }) {
                 onPressIn={() => setShowDistanceOptions(true)}
               />
             </View>
-            {/* Opções de percurso */}
             {showDistanceOptions && (
               <FlatList
                 data={distanceOptions}
                 renderItem={({ item }) => (
                   <TouchableHighlight onPress={() => handleSelectDistance(item)}>
-                    <Text style={styles.distanceOption}>{item}</Text>
+                    <Text style={styles.distanceOption}>{item} km</Text>
                   </TouchableHighlight>
                 )}
                 keyExtractor={(item, index) => index.toString()}
                 style={styles.distanceList}
               />
             )}
-            <Text style={styles.observacao}>*Para criar um racha público, deixe em branco o formulário de adversário*</Text>
           </>
         ) : (
           <>
-            {/* Formulário de Evento */}
             <View style={styles.inputContainer}>
               <Ionicons name="map-outline" size={20} color="red" style={styles.inputIcon} />
               <TextInput
@@ -181,7 +167,6 @@ export default function PageSignUpRace({ navigation }) {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* Exibir o DateTimePicker quando necessário */}
             {showDatePicker && (
               <DateTimePicker
                 value={date}
@@ -194,7 +179,6 @@ export default function PageSignUpRace({ navigation }) {
         )}
       </View>
 
-      {/* Botão de cadastro */}
       <TouchableOpacity style={styles.loginButton} onPress={handleSignUpRace}>
         <Text style={styles.loginButtonText}>{isTurnedOn ? "Cadastrar Racha" : "Cadastrar Evento"}</Text>
         <Ionicons name="arrow-forward-outline" size={20} color="black" style={styles.iconRight} />
@@ -271,41 +255,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 10,
-    width: '80%',
-    marginBottom: 20,
-    justifyContent: 'center',
+    borderRadius: 5,
+    marginBottom: 30,
   },
   loginButtonText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 18,
+    color: '#fff',
+    marginRight: 10,
   },
   iconRight: {
-    position: 'absolute',
-    right: 20,
-  },
-  observacao: {
-    fontSize: 12,
-    color: 'black',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    marginLeft: 10,
   },
   distanceList: {
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    padding: 10,
     position: 'absolute',
-    top: 100,
-    width: '100%',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    maxHeight: 150,
-    zIndex: 1,
+    top: 75,
+    left: 40,
+    right: 40,
+    zIndex: 10,
   },
   distanceOption: {
-    fontSize: 16,
-    color: 'red',
-    paddingVertical: 10,
+    fontSize: 18,
+    padding: 10,
+    color: 'black',
   },
 });

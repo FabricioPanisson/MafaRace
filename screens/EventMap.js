@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import MapView, { Polyline } from 'react-native-maps';
+import BackButton from '../components/BackButton';
 
-const EventMap = ({ route }) => {
+const EventMap = ({ route, navigation }) => {
   const { event } = route.params;
 
-  // Coordenadas de exemplo em Passo Fundo
+  // Coordenadas de exemplo
   const coordinates = [
     { latitude: -28.26916129433125, longitude: -52.425179990692 }, // Ponto de partida (exemplo)
     { latitude: -28.2669354665173, longitude: -52.41988037089626 },
@@ -13,6 +14,12 @@ const EventMap = ({ route }) => {
     { latitude: -28.2623686964428, longitude: -52.41020915041962 },
     { latitude: -28.259061769072673, longitude: -52.40338280443629 }, // Ponto de chegada (exemplo)
   ];
+
+  // Exemplo de coordenada do evento
+  const eventLocation = {
+    latitude: -28.2600,
+    longitude: -52.4091,
+  };
 
   const eventDate = new Date(event.datetime);
   const formattedDate = eventDate.toLocaleDateString('pt-BR');
@@ -26,20 +33,28 @@ const EventMap = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      <BackButton navigation={navigation} />
+      
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: coordinates[0].latitude,
-          longitude: coordinates[0].longitude,
+          latitude: eventLocation.latitude,
+          longitude: eventLocation.longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}
       >
-        <Polyline
-          coordinates={coordinates}
-          strokeColor="#FF0000"
-          strokeWidth={3}
-        />
+        {/* Mostrar o Marker */}
+        <Marker coordinate={eventLocation} title={event.event_name} />
+
+        {/* Se for um evento de racha, exibe a Polyline */}
+        {event.mode === 'racha' && (
+          <Polyline
+            coordinates={coordinates}
+            strokeColor="#FF0000"
+            strokeWidth={3}
+          />
+        )}
       </MapView>
 
       <View style={styles.eventInfo}>
@@ -68,9 +83,9 @@ const styles = StyleSheet.create({
     bottom: 80, // Ajustado para criar espaço entre a info do evento e o botão
     left: 10,
     right: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semitransparente
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     padding: 15,
-    borderRadius: 10, // Bordas arredondadas
+    borderRadius: 10,
     alignItems: 'center',
   },
   eventName: {

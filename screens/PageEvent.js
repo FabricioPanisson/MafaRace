@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, ScrollView, SafeAreaView, TouchableOpacity, event, } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton.js';
 import { BlurView } from 'expo-blur';
@@ -6,6 +6,7 @@ import { supabase } from '../services/supabaseClient.js';
 
 const PageEvent = ({ navigation }) => {
   const [events, setEvents] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -13,7 +14,6 @@ const PageEvent = ({ navigation }) => {
         const { data, error } = await supabase
           .from('race')
           .select('*')
-          .eq('mode', 'evento')
           .order('datetime', { ascending: true });
 
         if (error) {
@@ -28,110 +28,234 @@ const PageEvent = ({ navigation }) => {
 
     fetchEvents();
   }, []);
-  
+
   const handleEventSelect = (event) => {
-    navigation.navigate('EventMap', { event }); // Navega para a tela do mapa com os detalhes do evento
+    navigation.navigate('EventMap', {
+      event: event,
+      name: event.event_name,
+      distance: event.distance,
+    });
   };
+
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      const { error } = await supabase
+        .from('race')
+        .delete()
+        .eq('id', eventId);
+
+      if (error) {
+        console.error('Erro ao excluir evento:', error);
+      } else {
+        setEvents(events.filter((event) => event.id !== eventId));
+      }
+    } catch (err) {
+      console.error('Erro ao excluir evento:', err);
+    }
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+    <SafeAreaView style={styles.container}>
+      <BackButton navigation={navigation} />
+
+      {/* Botão para alternar modo de edição */}
+      <TouchableOpacity 
+        style={styles.editButton} 
+        onPress={() => setIsEditing(!isEditing)}
       >
-        <View style={styles.container}>
-          <BackButton navigation={navigation} />
+        <Text style={styles.editButtonText}>
+          {isEditing ? 'Concluir' : 'Editar'}
+        </Text>
+      </TouchableOpacity>
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.main}>
+          <Image
+            source={require("../assets/images/CronometroInicio.png")}
+            style={styles.icon}
+          />
           <View style={styles.titleContainer}>
-            <Text style={styles.titleRed}>Explore</Text>
-            <Text style={styles.titleBlack}>os</Text>
-            <Text style={styles.titleBlack}>eventos</Text>
+            <Text style={styles.title}>Explore Eventos</Text>
+            <Text style={styles.subtitle}>Descubra os próximos desafios e locais</Text>
           </View>
-          {events.length === 0 ? (
-            <Text style={styles.noEventsText}>Nenhum evento disponível.</Text>
-          ) : (
-            events.map((event) => (
+        </View>
+
+        {/* Renderiza os eventos e rachas */}
+        {events.length === 0 ? (
+          <Text style={styles.noEventsText}>Nenhum evento disponível.</Text>
+        ) : (
+          events.map((event) => (
+            <View key={event.id} style={styles.eventCard}>
               <TouchableOpacity
-                key={event.id}
-                style={styles.viewEvents}
-                onPress={() => navigation.navigate('EventMap', { event })}
+                style={styles.eventContent}
+                onPress={() => handleEventSelect(event)}
+                disabled={isEditing}
               >
                 <Image
                   source={
-                    event.image_url
-                      ? { uri: event.image_url }
-                      : require("../assets/images/eventoCarros1.jpg")
+                    event.mode === 'racha'
+                      ? require("../assets/images/rachaCarros.jpg") // Imagem para os rachas
+                      : event.image_url
+                      ? { uri: event.image_url }                 // Imagem customizada para eventos
+                      : require("../assets/images/eventoCarros1.jpg") // Imagem padrão para eventos
                   }
                   style={styles.eventImage}
                 />
-                <BlurView intensity={80} tint="dark" style={styles.absoluteBlur}>
-                  <Text style={styles.bodyText}>{event.event_name}</Text>
-                  <Text style={styles.bodyText}>
-                    {new Date(event.datetime).toLocaleString()}
-                  </Text>
-                  <Text style={styles.bodyText}>{event.location}</Text>
+
+                <BlurView intensity={80} tint="dark" style={styles.eventDetails}>
+                  {event.mode === 'racha' ? (
+                    <>
+                      <Text style={styles.eventTitle}>Racha da Comunidade</Text>
+                      <Text style={styles.eventType}>Racha</Text>
+                      <Text style={styles.eventDistance}>
+                        {event.distance ? `${event.distance} Km` : 'Distância não informada'}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.eventTitle}>{event.event_name}</Text>
+                      <Text style={styles.eventType}>Evento</Text>
+                      <Text style={styles.eventDate}>
+                        {new Date(event.datetime).toLocaleString()}
+                      </Text>
+                      <Text style={styles.eventLocation}>{event.location}</Text>
+                    </>
+                  )}
                 </BlurView>
               </TouchableOpacity>
-            ))
-          )}
-        </View>
+
+              {/* Botão de exclusão no modo de edição */}
+              {isEditing && (
+                <TouchableOpacity 
+                  style={styles.deleteButton} 
+                  onPress={() => handleDeleteEvent(event.id)}
+                >
+                  <Text style={styles.deleteButtonText}>Excluir</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ))
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    paddingVertical: 20,
-  },
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+  },
+  eventDistance: {
+    fontSize: 16,
+    color: '#fff',
+    marginTop: 5,
+  },
+  scrollContent: {
+    paddingTop: 20,
+    paddingBottom: 40,
+  },
+  main: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  icon: {
+    marginBottom: 20,
   },
   titleContainer: {
     alignItems: 'center',
-    marginTop: '20%',
+    marginHorizontal: 20,
   },
-  titleRed: {
-    fontSize: 64,
+  title: {
+    fontSize: 32,
     fontWeight: 'bold',
-    fontFamily: 'Montserrat-SemiBold',
     textAlign: 'center',
-    color: '#FD0100',
+    color: 'red',
   },
-  titleBlack: {
-    fontSize: 64,
-    marginTop: -20,
-    fontWeight: 'bold',
-    fontFamily: 'Montserrat-SemiBold',
+  subtitle: {
+    fontSize: 16,
     textAlign: 'center',
-    color: '#1C191F',
+    color: '#333',
+    marginTop: 10,
   },
-  bodyText: {
-    textAlign: 'center',
+  noEventsText: {
     fontSize: 18,
-    fontFamily: 'Montserrat-SemiBold',
-    color: '#FAFEFF',
+    color: '#888',
+    textAlign: 'center',
+    marginTop: 20,
   },
-  absoluteBlur: {
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  viewEvents: {
-    position: 'relative',
+  eventCard: {
     width: '90%',
-    borderRadius: 25,
+    borderRadius: 15,
     overflow: 'hidden',
-    marginVertical: 20,
+    marginVertical: 10,
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eventContent: {
+    flex: 1,
   },
   eventImage: {
     width: '100%',
-    height: 200,
+    height: 180,
+  },
+  eventDetails: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 10,
+  },
+  eventTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 5,
+  },
+  eventType: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 5,
+  },
+  eventDate: {
+    fontSize: 14,
+    color: '#ccc',
+  },
+  eventLocation: {
+    fontSize: 14,
+    color: '#ccc',
+  },
+  editButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 8,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 8,
+    marginLeft: 10,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 

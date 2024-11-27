@@ -23,11 +23,10 @@ export default function NavTopBar({ navigation }) {
 
   return (
     <View style={styles.topBar}>
-      <TouchableOpacity style={styles.ellipseIcon} onPress={() => {}}>
-        <Text style={styles.iconText1}>125</Text>
-      </TouchableOpacity>
-      {/* Adicione mais botões ou elementos aqui */}
-      <Text style={styles.iconText}>Av. Raul Sapequinha</Text>
+      {/* Centralize the text by wrapping it with a View and using flex */}
+      <View style={styles.centerTextContainer}>
+        <Text style={styles.iconText}>Av. Raul Seixas</Text>
+      </View>
     </View>
   );
 }
@@ -45,14 +44,10 @@ const styles = StyleSheet.create({
     width: '50%',
     alignItems: 'center',
   },
-  ellipseIcon: {
-    backgroundColor: '#fff',
-    borderRadius: 35,
-    height: 25,
-    width: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 10,
+  centerTextContainer: {
+    flex: 1,           // Take up remaining space
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
   iconText: {
     fontSize: 12,
